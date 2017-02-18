@@ -1,16 +1,20 @@
 class WeatherApp {
     constructor() {
         // TODO: 1: Create a data structure that stores the current weather and forecast for all cities
-
+        this.cityWeather = {};
         // TODO: 2 Listen when a dropdown list is changed
-
-
+        const cityDropDownE = document.getElementById('cityDropDown');
+        console.log(cityDropDownE);
+        cityDropDownE.addEventListener('change', this.selectCity.bind(this), false);
         // TODO: 3 Fetch data for the current selected city
+        const selectedCity = cityDropDownE.value;
+        this.sendRequet(selectedCity);
     }
 
     selectCity(event) {
         // TODO: 2-1: Display value
-
+        console.log('select value');
+        console.log(event.target.value);
         // TODO: 11: Get the city weather info or display it
         console.log(this.cityWeather)
     }
@@ -21,7 +25,14 @@ class WeatherApp {
         const base_uri = `https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22${city}${format}`
 
         // TODO: 5: Fetch data using getJSON
-
+        $.getJSON(base_uri)
+          .done((json) => {
+            this.processResponse(city,json);
+          })
+          .fail((jqxhr, testStatus, error) => {
+            const err = textStatus + "," + error;
+            console.log("Request faied:" + err);
+          })
     }
 
     processResponse(city, json) {
